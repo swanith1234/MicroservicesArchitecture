@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: work-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: work-service
+  template:
+    metadata:
+      labels:
+        app: work-service
+    spec:
+      containers:
+        - name: work-service
+          image: work-service:v3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3001

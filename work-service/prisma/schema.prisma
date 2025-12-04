@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// A big goal the user wants to achieve.
+model Dream {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  createdAt DateTime @default(now())
+
+  tasks     Task[]
+}
+
+/// A specific task defined by the user under a dream.
+model Task {
+  id          Int         @id @default(autoincrement())
+  dreamId     Int?
+  userId      Int
+  title       String
+  deadline    DateTime
+  createdAt   DateTime @default(now())
+
+  checkpoints Checkpoint[]
+
+  Dream       Dream?      @relation(fields: [dreamId], references: [id])
+}
+
+/// Checkpoints that divide a task into trackable steps.
+model Checkpoint {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  title     String
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  Task      Task     @relation(fields: [taskId], references: [id])
+}
